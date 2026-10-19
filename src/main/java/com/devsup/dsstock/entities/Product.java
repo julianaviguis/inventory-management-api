@@ -1,20 +1,40 @@
 package com.devsup.dsstock.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
 @Table(name ="tb_product")
+
+
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
     private Double price;
     private Integer quantity;
+
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+
+    public Product(){
+
+    }
+
+    public Product(UUID id, String name, Double price, Integer quantity, Category  category) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+    }
 
     public UUID getId() {
         return id;
@@ -46,5 +66,25 @@ public class Product {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
